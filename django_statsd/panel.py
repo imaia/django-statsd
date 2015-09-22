@@ -1,10 +1,15 @@
+import six
 from collections import defaultdict
 
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _, ungettext
 
-from debug_toolbar.panels import Panel
-from django_statsd.clients import statsd
+try:
+    from debug_toolbar.panels import Panel
+    from django_statsd.clients import statsd
+except ImportError:
+    print("please, install django-debug-toolbar")
+    exit(1)
 
 
 def munge(stats):
@@ -58,7 +63,7 @@ def times_summary(stats):
     for stat in stats:
         timings[stat[0].split('|')[0]].append(stat[2])
 
-    for stat, v in timings.iteritems():
+    for stat, v in six.iteritems(timings):
         if not v:
             continue
         v.sort()
